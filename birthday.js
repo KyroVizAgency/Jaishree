@@ -1040,15 +1040,39 @@ if (pinInput) {
     }
   });
 
-  pinInput.addEventListener('blur', () => {
-    // Keep active styling updated
-    if (!isUnlocked) {
-      setTimeout(() => {
-        // Option to refocus if lock screen is active
-      }, 100);
-    }
+  pinInput.addEventListener('focus', () => {
+    updateSlots();
   });
 }
+
+// Global keydown handler for physical keyboards
+window.addEventListener('keydown', (e) => {
+  if (isUnlocked || isEvaluating) return;
+  
+  // Allow normal shortcuts (Cmd/Ctrl + R, etc.)
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+  if (e.key >= '0' && e.key <= '9') {
+    if (currentPin.length < 4) {
+      currentPin += e.key;
+      if (pinInput) pinInput.value = currentPin;
+      updateSlots();
+      if (currentPin.length === 4) {
+        checkPin();
+      }
+    }
+  } else if (e.key === 'Backspace') {
+    if (currentPin.length > 0) {
+      currentPin = currentPin.slice(0, -1);
+      if (pinInput) pinInput.value = currentPin;
+      updateSlots();
+    }
+  } else if (e.key === 'Enter') {
+    if (currentPin.length === 4) {
+      checkPin();
+    }
+  }
+});
 
 // Focus input on card or slot clicks
 if (lockCard) {
