@@ -925,7 +925,7 @@ window.addEventListener('resize', () => { if (resizeRAF) return; resizeRAF = req
 resize();
 
 /* ============================================================
-   BACKGROUND AUDIO CONTROLLER (STARTS ON PASSWORD UNLOCK)
+   BACKGROUND AUDIO CONTROLLER (STARTS ON FIRST INTERACTION)
    ============================================================ */
 const bgAudio          = $('bgMusic');
 let isMusicPlaying     = false;
@@ -954,172 +954,21 @@ function startBgMusic() {
   });
 }
 
-/* ============================================================
-   DARK FUTURISTIC OTP LOCK SCREEN CONTROLLER
-   ============================================================ */
-const CORRECT_PIN = "7474";
-let currentPin = "";
-let isUnlocked = false;
-let isEvaluating = false;
+// Start background music on the very first touch/click/key anywhere on the website
+const handleFirstInteraction = () => {
+  startBgMusic();
+  document.removeEventListener('pointerdown', handleFirstInteraction);
+  document.removeEventListener('touchstart', handleFirstInteraction);
+  document.removeEventListener('keydown', handleFirstInteraction);
+};
+document.addEventListener('pointerdown', handleFirstInteraction);
+document.addEventListener('touchstart', handleFirstInteraction);
+document.addEventListener('keydown', handleFirstInteraction);
 
-const lockScreen = $('lockScreen');
-const lockCard   = $('lockCard');
-const lockStatus = $('lockStatus');
-const pinInput   = $('pinInput');
-const slotElements = document.querySelectorAll('.dark-pin-box, .glass-slot, .pin-box, .pin-slot');
-
-function focusPinInput() {
-  if (pinInput && !isUnlocked) {
-    pinInput.focus();
-  }
-}
-
-function updateSlots() {
-  slotElements.forEach((slot, idx) => {
-    slot.classList.remove('is-active', 'is-filled');
-    if (idx < currentPin.length) {
-      slot.classList.add('is-filled');
-      slot.textContent = '●';
-    } else {
-      slot.textContent = '';
-    }
-    if (idx === Math.min(currentPin.length, 3) && !isUnlocked) {
-      slot.classList.add('is-active');
-    }
-  });
-}
-
-function showStatus(text, type = 'default') {
-  if (!lockStatus) return;
-  lockStatus.textContent = text;
-  lockStatus.classList.toggle('is-success', type === 'success');
-  lockStatus.classList.toggle('is-error', type === 'error');
-}
-
-function checkPin() {
-  if (currentPin === CORRECT_PIN) {
-    isUnlocked = true;
-    showStatus("Unlocked ✦", 'success');
-    if (lockCard) lockCard.classList.add('is-unlocked-card');
-    
-    // Automatically start background music on successful unlock!
-    startBgMusic();
-
-    setTimeout(() => {
-      if (lockScreen) lockScreen.classList.add('is-hidden');
-      setTimeout(() => {
-        if (lockScreen) lockScreen.style.display = 'none';
-        bootMainScene();
-      }, 600);
-    }, 450);
-  } else {
-    isEvaluating = true;
-    showStatus("That code isn't right. Try again.", 'error');
-    if (lockCard) lockCard.classList.add('is-shaking');
-    
-    setTimeout(() => {
-      if (lockCard) lockCard.classList.remove('is-shaking');
-      currentPin = "";
-      if (pinInput) pinInput.value = "";
-      updateSlots();
-      showStatus("A little surprise is waiting for you.", 'default');
-      isEvaluating = false;
-      focusPinInput();
-    }, 550);
-  }
-}
-
-// On-Screen Soft Rose Glass Keypad Button Event Listeners
-const keyBtns = document.querySelectorAll('.glass-key-btn');
-keyBtns.forEach((btn) => {
-  btn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (isUnlocked || isEvaluating) return;
-    const key = btn.getAttribute('data-key');
-
-    if (key >= '0' && key <= '9') {
-      if (currentPin.length < 4) {
-        currentPin += key;
-        if (pinInput) pinInput.value = currentPin;
-        updateSlots();
-        if (currentPin.length === 4) {
-          checkPin();
-        }
-      }
-    } else if (key === 'clear') {
-      currentPin = "";
-      if (pinInput) pinInput.value = "";
-      updateSlots();
-    } else if (key === 'backspace') {
-      if (currentPin.length > 0) {
-        currentPin = currentPin.slice(0, -1);
-        if (pinInput) pinInput.value = currentPin;
-        updateSlots();
-      }
-    }
-  });
-});
-
-// Native input handlers for physical keyboard & mobile keypad
-if (pinInput) {
-  pinInput.addEventListener('input', (e) => {
-    if (isUnlocked || isEvaluating) return;
-    const sanitized = pinInput.value.replace(/[^0-9]/g, '').slice(0, 4);
-    currentPin = sanitized;
-    pinInput.value = sanitized;
-    updateSlots();
-
-    if (currentPin.length === 4) {
-      checkPin();
-    }
-  });
-
-  pinInput.addEventListener('focus', () => {
-    updateSlots();
-  });
-}
-
-// Global keydown handler for physical keyboards
-window.addEventListener('keydown', (e) => {
-  if (isUnlocked || isEvaluating) return;
-  
-  // Allow normal shortcuts (Cmd/Ctrl + R, etc.)
-  if (e.ctrlKey || e.metaKey || e.altKey) return;
-
-  if (e.key >= '0' && e.key <= '9') {
-    if (currentPin.length < 4) {
-      currentPin += e.key;
-      if (pinInput) pinInput.value = currentPin;
-      updateSlots();
-      if (currentPin.length === 4) {
-        checkPin();
-      }
-    }
-  } else if (e.key === 'Backspace') {
-    if (currentPin.length > 0) {
-      currentPin = currentPin.slice(0, -1);
-      if (pinInput) pinInput.value = currentPin;
-      updateSlots();
-    }
-  } else if (e.key === 'Enter') {
-    if (currentPin.length === 4) {
-      checkPin();
-    }
-  }
-});
-
-// Focus input on card or slot clicks
-if (lockCard) {
-  lockCard.addEventListener('click', () => {
-    focusPinInput();
-  });
-}
-
-// Auto-focus input on page load
+// Auto-boot main birthday scene immediately on load
 setTimeout(() => {
-  focusPinInput();
-  updateSlots();
-}, 200);
+  bootMainScene();
+}, 50);
 
 function bootMainScene() {
   if (reduceMotion) {
