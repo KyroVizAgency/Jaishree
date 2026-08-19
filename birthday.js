@@ -251,10 +251,10 @@ function buildScene(){
 
   const wide = W / H > 1.2;
   cx = W * (wide ? 0.57 : 0.5);
-  cy = H * (wide ? 0.37 : 0.38);
-  ry = Math.min(H * (wide ? 0.33 : 0.33), W * 0.34);
+  cy = H * (wide ? 0.37 : 0.22);
+  ry = Math.min(H * (wide ? 0.33 : 0.16), W * (wide ? 0.34 : 0.26));
   rx = ry * 1.16;
-  groundY = H * 0.93;
+  groundY = wide ? H * 0.93 : H * 0.43;
 
   bgGrad = ctx.createLinearGradient(0, 0, 0, H);
   bgGrad.addColorStop(0, '#fff3e9');
@@ -265,7 +265,7 @@ function buildScene(){
   glowGrad.addColorStop(0, 'rgba(255,219,170,0.6)');
   glowGrad.addColorStop(0.5, 'rgba(255,170,150,0.2)');
   glowGrad.addColorStop(1, 'rgba(255,170,150,0)');
-  groundGrad = ctx.createRadialGradient(cx, H * 1.02, ry * 0.2, cx, H * 1.02, ry * 1.6);
+  groundGrad = ctx.createRadialGradient(cx, wide ? H * 1.02 : H * 0.44, ry * 0.2, cx, wide ? H * 1.02 : H * 0.44, ry * 1.6);
   groundGrad.addColorStop(0, 'rgba(255,205,165,0.5)');
   groundGrad.addColorStop(1, 'rgba(255,205,165,0)');
 
@@ -286,7 +286,7 @@ function buildScene(){
     });
   }
 
-  const baseX = cx, baseY = H * 1.0;
+  const baseX = cx, baseY = wide ? H * 1.0 : H * 0.42;
   const trunkTopY = cy + ry * 0.62;
   const trunkW = Math.max(9, W * 0.024);
   const limbLen = ry * 0.6;

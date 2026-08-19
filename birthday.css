@@ -307,7 +307,7 @@ body{
     touch-action: none;
   }
 
-  /* FLUID CARD BOUNDS (GUARANTEES >= 16px MARGIN ON LEFT & RIGHT AT ALL RATIOS) */
+  /* FLUID CARD BOUNDS — SITS BELOW TREE TRUNK FOR ZERO OVERLAP */
   .wish {
     position: absolute;
     left: 50% !important;
@@ -315,7 +315,8 @@ body{
     transform: translateX(-50%) !important;
     width: min(92vw, 430px) !important;
     max-width: 430px !important;
-    bottom: max(16px, env(safe-area-inset-bottom, 16px)) !important;
+    top: 45% !important;
+    bottom: auto !important;
     box-sizing: border-box !important;
     margin: 0 auto !important;
   }
