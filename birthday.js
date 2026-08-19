@@ -582,13 +582,13 @@ function initButterflies() {
     const el = createButterflyElement(i);
     butterflyLayer.appendChild(el);
 
-    const scale = rand(0.6, 1.05);
-    const baseX = W > 767 ? rand(W * 0.45, W * 0.88) : rand(W * 0.15, W * 0.85);
-    const baseY = W > 767 ? rand(H * 0.18, H * 0.72) : rand(H * 0.12, H * 0.45);
+    const scale = W > 767 ? rand(0.65, 1.05) : rand(0.5, 0.85);
+    const baseX = W > 767 ? rand(W * 0.45, W * 0.88) : clamp(rand(W * 0.2, W * 0.8), 35, W - 35);
+    const baseY = W > 767 ? rand(H * 0.18, H * 0.72) : rand(H * 0.12, H * 0.42);
     const speedX = rand(0.6, 1.4);
     const speedY = rand(0.5, 1.2);
-    const ampX = rand(40, 110);
-    const ampY = rand(30, 80);
+    const ampX = W > 767 ? rand(40, 110) : rand(15, 35);
+    const ampY = W > 767 ? rand(30, 80) : rand(10, 25);
     const phaseX = rand(0, Math.PI * 2);
     const phaseY = rand(0, Math.PI * 2);
     const staggerDelay = i * rand(350, 550);

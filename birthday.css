@@ -245,8 +245,8 @@ body{
   }
 }
 
-/* Mobile (480px – 767px) */
-@media (max-width: 767px) {
+/* Mobile (480px – 768px) */
+@media (max-width: 768px) {
   :root {
     --name-x: 0px;
     --name-y: 0px;
@@ -282,32 +282,59 @@ body{
     width: clamp(85px, 24vw, 122px);
     touch-action: none;
   }
+  /* CRITICAL FIX FOR FINAL MESSAGE CARD CENTERING & ZERO OVERFLOW */
   .wish {
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90vw;
-    max-width: 440px;
-    bottom: max(18px, env(safe-area-inset-bottom, 18px));
+    position: absolute;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    width: calc(100vw - 32px) !important;
+    max-width: 420px !important;
+    bottom: max(16px, env(safe-area-inset-bottom, 16px)) !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
   }
   .wish__card {
+    position: relative;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
     text-align: center;
-    padding: clamp(20px, 4vw, 24px) clamp(16px, 3.8vw, 22px);
-    border-radius: 22px;
+    padding: 22px 18px 24px !important;
+    border-radius: 20px;
+    margin: 0 !important;
   }
   .wish__eyebrow {
-    font-size: clamp(13px, 3.4vw, 16px);
+    font-size: clamp(13px, 3.7vw, 16px);
+    text-align: center;
+  }
+  .wish__heading {
+    text-align: center;
+    margin: 0 0 8px 0;
   }
   .wish__headingSmall {
-    font-size: clamp(18px, 4.5vw, 24px);
+    font-size: clamp(18px, 4.8vw, 24px);
+    text-align: center;
   }
   .wish__headingName {
-    font-size: clamp(36px, 11vw, 54px);
+    font-size: clamp(36px, 10.5vw, 52px);
+    max-width: 100%;
+    white-space: nowrap;
+    text-align: center;
   }
   .wish__paragraph {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    font-size: clamp(13px, 3.6vw, 15.5px);
+    line-height: 1.72;
     text-align: center;
-    font-size: clamp(13.5px, 3.6vw, 16px);
-    line-height: 1.75;
-    word-break: break-word;
+    margin-top: 12px;
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+  .w-word {
+    white-space: pre-wrap !important;
   }
   .wish__footer {
     justify-content: center;
@@ -326,46 +353,23 @@ body{
   :root {
     --name-x: 0px;
     --name-y: 0px;
-    --name-size: clamp(34px, 12.5vw, 48px);
-  }
-  .hero__eyebrow {
-    top: clamp(14px, 3.8vh, 30px);
-    font-size: clamp(11px, 3.8vw, 14px);
-  }
-  .hero__name {
-    top: clamp(38px, 8vh, 64px);
-  }
-  .targetWrap {
-    top: 43vh;
-  }
-  .target {
-    width: clamp(82px, 27vw, 122px);
-  }
-  .hero__hint {
-    bottom: max(14px, env(safe-area-inset-bottom, 14px));
-    font-size: clamp(10px, 3.4vw, 13px);
-  }
-  .archery {
-    left: clamp(12px, 4vw, 24px);
-    bottom: clamp(22px, 5vh, 44px);
-    width: clamp(78px, 24vw, 110px);
+    --name-size: clamp(34px, 12.5vw, 46px);
   }
   .wish {
-    left: 50%;
-    transform: translateX(-50%);
-    width: 92vw;
-    max-width: 380px;
-    bottom: max(14px, env(safe-area-inset-bottom, 14px));
+    width: calc(100vw - 24px) !important;
+    max-width: 380px !important;
+    bottom: max(12px, env(safe-area-inset-bottom, 12px)) !important;
   }
   .wish__card {
-    text-align: center;
-    padding: 16px 14px;
+    padding: 18px 14px 20px !important;
     border-radius: 18px;
   }
+  .wish__headingName {
+    font-size: clamp(32px, 11vw, 46px);
+  }
   .wish__paragraph {
-    text-align: center;
-    font-size: clamp(12.5px, 3.5vw, 15px);
-    line-height: 1.7;
+    font-size: clamp(12.5px, 3.5vw, 14.5px);
+    line-height: 1.68;
   }
 }
 
