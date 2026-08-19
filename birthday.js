@@ -588,6 +588,20 @@ function applyNock(){
 }
 
 function refreshRig(){
+  nockProxy.val = REST_NOCK; applyNock();
+  gsap.set(archery, { rotation: 0, scale: 1, x: 0, y: 0 });
+  archery.style.left = '0px'; archery.style.top = '0px';
+  gsap.set(arrow, { x: 0, y: 0 });
+
+  const aR = archery.getBoundingClientRect();
+  const bR = bow.getBoundingClientRect();
+
+  // If DOM layout is not ready yet (0 width), retry on next animation frame
+  if (!bR || bR.width === 0) {
+    requestAnimationFrame(refreshRig);
+    return;
+  }
+
   // measure target rect or layout center for accurate aim angle across all resolutions
   const tRect = target.getBoundingClientRect();
   const heartX = (tRect.width > 0) ? (tRect.left + tRect.width / 2) : (W * 0.5);
@@ -602,14 +616,6 @@ function refreshRig(){
   const aimRad = Math.atan2(heartX - gripX, gripY - heartY);
   pullUX = -Math.sin(aimRad); pullUY = Math.cos(aimRad);  // opposite of aim = pull-back
 
-  // #bow / #arrow are SVG — no offset* — so measure rects in the rig's LOCAL
-  // frame: neutralise the rig transform first (getBBox-style, sync, no paint).
-  nockProxy.val = REST_NOCK; applyNock();
-  gsap.set(archery, { rotation: 0, scale: 1, x: 0, y: 0 });
-  archery.style.left = '0px'; archery.style.top = '0px';
-  gsap.set(arrow, { x: 0, y: 0 });
-  const aR = archery.getBoundingClientRect();
-  const bR = bow.getBoundingClientRect();
   const sR = serving.getBoundingClientRect();
   const rR = arrow.getBoundingClientRect();
   svgScale = bR.width / 460;
