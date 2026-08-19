@@ -761,19 +761,14 @@ body{
   margin-bottom: clamp(18px, 3.5vh, 26px);
 }
 
-/* Native Password Input Overlay (Touch-friendly & 16px to prevent iOS zoom) */
+/* Native Hidden Input for Keyboard Listener */
 .pin-native-input {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
   opacity: 0;
-  font-size: 16px; /* Prevents iOS Safari auto-zoom */
-  z-index: 10;
-  cursor: pointer;
-  border: none;
-  background: transparent;
-  color: transparent;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+  z-index: -1;
 }
 
 /* 4 PIN Boxes — Warm Glass Design matching Act 1 */
@@ -784,9 +779,11 @@ body{
   gap: clamp(10px, 3vw, 14px);
   margin-bottom: clamp(18px, 3.5vh, 24px);
   cursor: pointer;
+  z-index: 2;
 }
 
 .dark-pin-box {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -796,10 +793,13 @@ body{
   background: rgba(255, 255, 255, 0.72);
   border: 1.5px solid rgba(170, 110, 125, 0.25);
   box-shadow: inset 0 2px 4px rgba(122, 74, 85, 0.08);
-  font-family: "Fraunces", Georgia, serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-weight: 700;
-  font-size: clamp(20px, 4.8vw, 24px);
-  color: #6e0a31;
+  font-size: clamp(22px, 5vw, 26px);
+  color: #d4235c;
+  line-height: 1;
+  user-select: none;
+  z-index: 2;
   transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -812,15 +812,8 @@ body{
 .dark-pin-box.is-filled {
   background: rgba(255, 255, 255, 0.95);
   border-color: #d4235c;
-}
-
-.dark-pin-box.is-filled::after {
-  content: "";
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #ff5f86 0%, #d4235c 100%);
-  box-shadow: 0 2px 6px rgba(168, 15, 67, 0.3);
+  color: #d4235c;
+  box-shadow: 0 4px 12px rgba(212, 35, 92, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.9);
 }
 
 /* Status Message / Helper Line */
