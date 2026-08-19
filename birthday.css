@@ -108,7 +108,7 @@ body{
   letter-spacing:.06em;
   color:#a85069;
   text-shadow:0 1px 10px rgba(255,248,241,.9);
-  opacity:0;                          /* GSAP reveals */
+  opacity:1;
 }
 
 .hero__name{
@@ -127,7 +127,7 @@ body{
   filter:
     drop-shadow(0 1px 1px rgba(255,252,248,.95))
     drop-shadow(0 3px 8px rgba(130,18,55,.35));
-  opacity:0;                          /* GSAP reveals */
+  opacity:1;
   pointer-events:none;
 }
 

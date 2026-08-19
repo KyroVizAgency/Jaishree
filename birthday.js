@@ -588,12 +588,6 @@ function applyNock(){
 }
 
 function refreshRig(){
-  nockProxy.val = REST_NOCK; applyNock();
-  gsap.set(archery, { rotation: 0, scale: 1, x: 0, y: 0 });
-  archery.style.left = '0px'; archery.style.top = '0px';
-  gsap.set(arrow, { x: 0, y: 0 });
-
-  const aR = archery.getBoundingClientRect();
   const bR = bow.getBoundingClientRect();
 
   // If DOM layout is not ready yet (0 width), retry on next animation frame
@@ -601,6 +595,13 @@ function refreshRig(){
     requestAnimationFrame(refreshRig);
     return;
   }
+
+  nockProxy.val = REST_NOCK; applyNock();
+  gsap.set(archery, { rotation: 0, scale: 1, x: 0, y: 0 });
+  archery.style.left = '0px'; archery.style.top = '0px';
+  gsap.set(arrow, { x: 0, y: 0 });
+
+  const aR = archery.getBoundingClientRect();
 
   // measure target rect or layout center for accurate aim angle across all resolutions
   const tRect = target.getBoundingClientRect();
