@@ -1212,12 +1212,14 @@ document.addEventListener('pointerdown', handleFirstInteraction);
 document.addEventListener('touchstart', handleFirstInteraction);
 document.addEventListener('keydown', handleFirstInteraction);
 
-// Auto-boot main birthday scene immediately on load
-setTimeout(() => {
-  bootMainScene();
-}, 50);
-
 function bootMainScene() {
+  console.info("[Birthday] Intro mounted");
+  const gsapObj = window.gsap || globalThis.gsap;
+  if (!gsapObj) {
+    console.warn("[Birthday] GSAP loading retry...");
+    setTimeout(bootMainScene, 100);
+    return;
+  }
   if (reduceMotion) {
     drawFinal();
   } else {
@@ -1225,13 +1227,22 @@ function bootMainScene() {
     setDraw(0);
     enter();
     replay.addEventListener('click', resetAll);
+    console.info("[Birthday] Intro animation started successfully");
   }
 }
 
-// Prepare background elements silently on load under lock screen
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', bootMainScene);
+} else {
+  setTimeout(bootMainScene, 30);
+}
+
+// Prepare background elements silently on load
 if (!reduceMotion) {
   buildMotes();
-  document.fonts && document.fonts.ready.then(() => { refreshRig(); setDraw(0); });
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => { refreshRig(); setDraw(0); });
+  }
 }
 
 /* ============================================================
