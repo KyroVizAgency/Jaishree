@@ -979,6 +979,9 @@ function updateSlots() {
     slot.classList.remove('is-active', 'is-filled');
     if (idx < currentPin.length) {
       slot.classList.add('is-filled');
+      slot.textContent = '●';
+    } else {
+      slot.textContent = '';
     }
     if (idx === Math.min(currentPin.length, 3) && !isUnlocked) {
       slot.classList.add('is-active');
@@ -1025,6 +1028,37 @@ function checkPin() {
     }, 550);
   }
 }
+
+// On-Screen Soft Rose Glass Keypad Button Event Listeners
+const keyBtns = document.querySelectorAll('.glass-key-btn');
+keyBtns.forEach((btn) => {
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (isUnlocked || isEvaluating) return;
+    const key = btn.getAttribute('data-key');
+
+    if (key >= '0' && key <= '9') {
+      if (currentPin.length < 4) {
+        currentPin += key;
+        if (pinInput) pinInput.value = currentPin;
+        updateSlots();
+        if (currentPin.length === 4) {
+          checkPin();
+        }
+      }
+    } else if (key === 'clear') {
+      currentPin = "";
+      if (pinInput) pinInput.value = "";
+      updateSlots();
+    } else if (key === 'backspace') {
+      if (currentPin.length > 0) {
+        currentPin = currentPin.slice(0, -1);
+        if (pinInput) pinInput.value = currentPin;
+        updateSlots();
+      }
+    }
+  });
+});
 
 // Native input handlers for physical keyboard & mobile keypad
 if (pinInput) {
