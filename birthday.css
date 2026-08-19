@@ -245,100 +245,134 @@ body{
   }
 }
 
-/* Mobile (480px – 768px) */
+/* ============================================================
+   FLUID MOBILE RESPONSIVE SYSTEM (DESKTOP IS 100% LOCKED FOR > 768px)
+   ============================================================ */
+
+/* Mobile & Tablet (<= 768px) */
 @media (max-width: 768px) {
   :root {
     --name-x: 0px;
     --name-y: 0px;
-    --name-size: clamp(38px, 12vw, 56px);
+    --name-size: clamp(38px, 12.5vw, 56px);
   }
-  html, body {
+
+  html, body, #root {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
     touch-action: manipulation;
+  }
+
+  .scene {
     width: 100%;
     max-width: 100vw;
+    min-height: 100svh;
+    min-height: 100dvh;
     overflow-x: hidden;
   }
+
   .hero__eyebrow {
-    top: clamp(16px, 4.2vh, 36px);
+    top: clamp(14px, 4.2svh, 36px);
     font-size: clamp(12px, 3.6vw, 15px);
   }
+
   .hero__name {
-    top: clamp(42px, 8.8vh, 76px);
+    top: clamp(38px, 8.5svh, 74px);
   }
+
   .targetWrap {
-    top: 44vh;
+    top: 44svh;
+    transform: translateY(-50%);
   }
+
   .target {
-    width: clamp(90px, 26vw, 140px);
+    width: clamp(90px, 28vw, 145px);
+    max-height: 28svh;
   }
+
   .hero__hint {
     bottom: max(16px, env(safe-area-inset-bottom, 16px));
-    font-size: clamp(11px, 3.2vw, 14px);
+    font-size: clamp(11px, 3.2vw, 15px);
     letter-spacing: .14em;
   }
+
   .archery {
-    left: clamp(16px, 5vw, 36px);
-    bottom: clamp(28px, 6vh, 52px);
-    width: clamp(85px, 24vw, 122px);
+    left: clamp(14px, 4vw, 32px);
+    bottom: clamp(24px, 5.5svh, 50px);
+    width: clamp(82px, 24vw, 120px);
     touch-action: none;
   }
-  /* CRITICAL FIX FOR FINAL MESSAGE CARD CENTERING & ZERO OVERFLOW */
+
+  /* FLUID CARD BOUNDS (GUARANTEES >= 16px MARGIN ON LEFT & RIGHT AT ALL RATIOS) */
   .wish {
     position: absolute;
     left: 50% !important;
     right: auto !important;
     transform: translateX(-50%) !important;
-    width: calc(100vw - 32px) !important;
-    max-width: 420px !important;
+    width: min(92vw, 430px) !important;
+    max-width: 430px !important;
     bottom: max(16px, env(safe-area-inset-bottom, 16px)) !important;
     box-sizing: border-box !important;
-    margin: 0 !important;
+    margin: 0 auto !important;
   }
+
   .wish__card {
     position: relative;
     width: 100% !important;
     max-width: 100% !important;
     box-sizing: border-box !important;
     text-align: center;
-    padding: 22px 18px 24px !important;
-    border-radius: 20px;
+    padding: clamp(18px, 4.5vw, 28px) clamp(16px, 4vw, 24px) !important;
+    border-radius: 22px;
     margin: 0 !important;
   }
+
   .wish__eyebrow {
     font-size: clamp(13px, 3.7vw, 16px);
     text-align: center;
   }
+
   .wish__heading {
     text-align: center;
     margin: 0 0 8px 0;
   }
+
   .wish__headingSmall {
     font-size: clamp(18px, 4.8vw, 24px);
     text-align: center;
   }
+
   .wish__headingName {
-    font-size: clamp(36px, 10.5vw, 52px);
+    font-size: clamp(36px, 10.8vw, 54px);
     max-width: 100%;
     white-space: nowrap;
     text-align: center;
   }
+
   .wish__paragraph {
     width: 100% !important;
     max-width: 100% !important;
     box-sizing: border-box !important;
-    font-size: clamp(13px, 3.6vw, 15.5px);
+    font-size: clamp(13px, 3.7vw, 16.5px);
     line-height: 1.72;
     text-align: center;
     margin-top: 12px;
     overflow-wrap: break-word;
     word-break: normal;
   }
+
   .w-word {
     white-space: pre-wrap !important;
   }
+
   .wish__footer {
     justify-content: center;
   }
+
   .replay {
     right: clamp(12px, 3.5vw, 20px);
     bottom: max(14px, env(safe-area-inset-bottom, 14px));
@@ -348,42 +382,53 @@ body{
   }
 }
 
-/* Small Mobile (< 480px down to 320px) */
-@media (max-width: 479px) {
+/* Short Mobile Screens (<= 620px height) */
+@media (max-height: 620px) and (max-width: 768px) {
+  .hero__eyebrow { top: 12px; font-size: 11px; }
+  .hero__name { top: 28px; }
+  .targetWrap { top: 42svh; }
+  .target { width: clamp(75px, 20vw, 105px); }
+  .wish { bottom: max(10px, env(safe-area-inset-bottom, 10px)) !important; }
+  .wish__card { padding: 14px 12px 16px !important; }
+  .wish__paragraph { font-size: clamp(12px, 3.4vw, 14px); line-height: 1.6; margin-top: 8px; }
+}
+
+/* Small Mobile Screens (<= 360px width) */
+@media (max-width: 360px) {
   :root {
     --name-x: 0px;
     --name-y: 0px;
-    --name-size: clamp(34px, 12.5vw, 46px);
+    --name-size: clamp(32px, 11vw, 44px);
   }
   .wish {
     width: calc(100vw - 24px) !important;
-    max-width: 380px !important;
+    max-width: 336px !important;
     bottom: max(12px, env(safe-area-inset-bottom, 12px)) !important;
   }
   .wish__card {
-    padding: 18px 14px 20px !important;
-    border-radius: 18px;
+    padding: 16px 12px 18px !important;
+    border-radius: 16px;
   }
   .wish__headingName {
-    font-size: clamp(32px, 11vw, 46px);
+    font-size: clamp(30px, 10vw, 42px);
   }
   .wish__paragraph {
-    font-size: clamp(12.5px, 3.5vw, 14.5px);
-    line-height: 1.68;
+    font-size: clamp(12px, 3.4vw, 14px);
+    line-height: 1.65;
   }
 }
 
 /* Mobile Landscape Guard */
 @media (max-height: 500px) and (orientation: landscape) {
-  .hero__eyebrow { top: 12px; font-size: 11px; }
-  .hero__name { top: 28px; font-size: 32px; }
-  .targetWrap { top: 48vh; }
-  .target { width: 70px; }
-  .archery { bottom: 12px; left: 16px; width: 70px; }
-  .hero__hint { bottom: 10px; font-size: 10px; }
-  .wish { bottom: 10px; width: 85vw; max-width: 480px; }
-  .wish__card { padding: 12px 14px; }
-  .wish__paragraph { font-size: 12px; line-height: 1.5; }
+  .hero__eyebrow { top: 10px; font-size: 11px; }
+  .hero__name { top: 24px; }
+  .targetWrap { top: 48svh; }
+  .target { width: 68px; }
+  .archery { bottom: 10px; left: 14px; width: 68px; }
+  .hero__hint { bottom: 8px; font-size: 10px; }
+  .wish { bottom: 8px; width: min(88vw, 460px) !important; }
+  .wish__card { padding: 10px 12px !important; }
+  .wish__paragraph { font-size: 11.5px; line-height: 1.48; }
 }
 .hero__ring{ display:none; }
 
