@@ -588,30 +588,24 @@ function applyNock(){
 }
 
 function refreshRig(){
+  nockProxy.val = REST_NOCK; applyNock();
+
+  const aRect = archery.getBoundingClientRect();
   const bR = bow.getBoundingClientRect();
 
   // If DOM layout is not ready yet (0 width), retry on next animation frame
-  if (!bR || bR.width === 0) {
+  if (!bR || bR.width === 0 || !aRect || aRect.width === 0) {
     requestAnimationFrame(refreshRig);
     return;
   }
-
-  nockProxy.val = REST_NOCK; applyNock();
-  gsap.set(archery, { rotation: 0, scale: 1, x: 0, y: 0 });
-  archery.style.left = '0px'; archery.style.top = '0px';
-  gsap.set(arrow, { x: 0, y: 0 });
-
-  const aR = archery.getBoundingClientRect();
 
   // measure target rect or layout center for accurate aim angle across all resolutions
   const tRect = target.getBoundingClientRect();
   const heartX = (tRect.width > 0) ? (tRect.left + tRect.width / 2) : (W * 0.5);
   const heartY = (tRect.height > 0) ? (tRect.top + tRect.height / 2) : (H * 0.33);
 
-  // For mobile screens, anchor grip appropriately to prevent overlap with heart or text
-  const isMobile = W < 768;
-  const gripX = isMobile ? Math.max(50, W * 0.18) : (W * 0.24);
-  const gripY = isMobile ? Math.min(H * 0.82, H - 75) : (H * 0.76);
+  const gripX = aRect.left + aRect.width * 0.5;
+  const gripY = aRect.top + aRect.height * 0.8;
 
   // rotation so local "up" (0,-1) maps to the grip→heart direction
   const aimRad = Math.atan2(heartX - gripX, gripY - heartY);
@@ -620,16 +614,13 @@ function refreshRig(){
   const sR = serving.getBoundingClientRect();
   const rR = arrow.getBoundingClientRect();
   svgScale = bR.width / 460;
-  const gripLX = (bR.left - aR.left) + 0.5 * bR.width;
-  const gripLY = (bR.top  - aR.top ) + (240 / 300) * bR.height;   // grip ~y240 in viewBox
-  const nockLX = (sR.left - aR.left) + 0.5 * sR.width;
-  const nockLY = (sR.top  - aR.top ) + 0.5 * sR.height;
-  arrowBaseX = nockLX - ((rR.left - aR.left) + 0.5 * rR.width);
-  arrowBaseY = nockLY - ((rR.top  - aR.top ) + (205 / 220) * rR.height);
+  const gripLX = 0.5 * bR.width;
+  const gripLY = (240 / 300) * bR.height;
+  const nockLX = (sR.left - aRect.left) + 0.5 * sR.width;
+  const nockLY = (sR.top  - aRect.top ) + 0.5 * sR.height;
+  arrowBaseX = nockLX - ((rR.left - aRect.left) + 0.5 * rR.width);
+  arrowBaseY = nockLY - ((rR.top  - aRect.top ) + (205 / 220) * rR.height);
 
-  // anchor the grip at (gripX,gripY) and rotate the rig around it
-  archery.style.left = (gripX - gripLX) + 'px';
-  archery.style.top  = (gripY - gripLY) + 'px';
   gsap.set(archery, { transformOrigin: `${gripLX}px ${gripLY}px`, rotation: aimRad * 180 / Math.PI });
   gsap.set(arrow, { x: arrowBaseX, y: arrowBaseY });
   maxDraw = Math.min(bR.height * 0.72, H * 0.16, 132);
