@@ -100,7 +100,7 @@ body{
 }
 
 .hero__eyebrow{
-  position:absolute; top:clamp(32px, 8vh, 85px); left:0; right:0;
+  position:absolute; top:clamp(24px, 6vh, 65px); left:0; right:0;
   text-align:center;
   font-family:"Cormorant Garamond", Georgia, serif;
   font-style:italic; font-weight:600;
@@ -112,7 +112,7 @@ body{
 }
 
 .hero__name{
-  position:absolute; top:clamp(75px, 15vh, 150px); left:0; right:0;
+  position:absolute; top:clamp(55px, 12vh, 120px); left:0; right:0;
   text-align:center;
   font-family:"Great Vibes", cursive;
   font-weight:400;
@@ -133,7 +133,7 @@ body{
 
 /* ---- the target heart (GSAP animates .target on the hit → fall → burst) ---- */
 .targetWrap{
-  position:absolute; top:clamp(195px, 34vh, 340px); left:0; right:0;
+  position:absolute; top:46vh; left:0; right:0;
   display:flex; justify-content:center;
   transform:translateY(-50%);         /* centre at target height — wrap is NOT animated */
   pointer-events:none;
@@ -166,16 +166,13 @@ body{
   will-change:transform;
 }
 
-/* ---- the bow + arrow rig ----
-   Placed lower-left and rotated by JS to aim at the heart, so the shot travels
-   on a DIAGONAL. The whole rig (left/top + rotation around the grip) is set in
-   JS from measured geometry; everything below is in the rig's own space. */
+/* ---- the bow + arrow rig ---- */
 .archery{
   position:absolute;
-  left:clamp(40px, 14vw, 180px);
-  bottom:clamp(60px, 14vh, 140px);
+  left:clamp(30px, 10vw, 160px);
+  bottom:clamp(45px, 10vh, 120px);
   top:auto;
-  width:clamp(110px, 18vw, 168px);
+  width:clamp(100px, 18vw, 168px);
   cursor:grab;
   -webkit-tap-highlight-color:transparent;
   touch-action:none;
@@ -219,7 +216,7 @@ body{
 
 /* ---- the draw / release hint ---- */
 .hero__hint{
-  position:absolute; bottom:clamp(18px, 5.5vh, 45px); left:0; right:0;
+  position:absolute; bottom:clamp(16px, 4.5vh, 40px); left:0; right:0;
   padding-bottom:env(safe-area-inset-bottom, 0px);
   text-align:center;
   font-family:"Cormorant Garamond", Georgia, serif;
@@ -227,7 +224,7 @@ body{
   font-size:clamp(12px, 2.5vw, 18px);
   letter-spacing:.16em; text-transform:uppercase;
   color:#b06a7c;
-  opacity:0;                          /* GSAP reveals */
+  opacity:1;
 }
 .hero__ring{ display:none; }
 
@@ -238,13 +235,13 @@ body{
 /* Tablet (768px – 1023px) */
 @media (max-width: 1023px) {
   .hero__eyebrow {
-    top: clamp(28px, 7.5vh, 70px);
+    top: clamp(22px, 5.5vh, 55px);
   }
   .hero__name {
-    top: clamp(65px, 14.5vh, 130px);
+    top: clamp(50px, 11.5vh, 105px);
   }
   .targetWrap {
-    top: clamp(180px, 34vh, 310px);
+    top: 45vh;
   }
 }
 
@@ -253,28 +250,30 @@ body{
   :root {
     --name-x: 0px;
     --name-y: 0px;
-    --name-size: clamp(38px, 11.5vw, 56px);
+    --name-size: clamp(38px, 11.5vw, 54px);
   }
   .hero__eyebrow {
-    top: clamp(24px, 7vh, 55px);
+    top: clamp(20px, 5vh, 45px);
     font-size: clamp(12px, 3.8vw, 16px);
   }
   .hero__name {
-    top: clamp(55px, 14vh, 105px);
+    top: clamp(46px, 10.5vh, 92px);
   }
   .targetWrap {
-    top: clamp(160px, 33vh, 260px);
+    top: 44vh;
   }
   .target {
     width: clamp(90px, 26vw, 150px);
   }
   .hero__hint {
-    bottom: clamp(14px, 4.5vh, 32px);
+    bottom: clamp(14px, 4vh, 28px);
     font-size: clamp(11px, 3.2vw, 14px);
     letter-spacing: .14em;
   }
   .archery {
-    width: clamp(85px, 22vw, 125px);
+    left: clamp(20px, 6vw, 40px);
+    bottom: clamp(35px, 8vh, 60px);
+    width: clamp(90px, 24vw, 130px);
   }
   .wish {
     max-width: 85%;
@@ -291,24 +290,26 @@ body{
     --name-size: clamp(34px, 12vw, 46px);
   }
   .hero__eyebrow {
-    top: clamp(20px, 6vh, 45px);
+    top: clamp(18px, 4.5vh, 38px);
     font-size: clamp(11px, 4vw, 15px);
   }
   .hero__name {
-    top: clamp(48px, 13vh, 88px);
+    top: clamp(42px, 9.5vh, 80px);
   }
   .targetWrap {
-    top: clamp(140px, 31vh, 220px);
+    top: 43vh;
   }
   .target {
-    width: clamp(80px, 27vw, 120px);
+    width: clamp(82px, 27vw, 125px);
   }
   .hero__hint {
-    bottom: clamp(12px, 4vh, 24px);
+    bottom: clamp(12px, 3.5vh, 22px);
     font-size: clamp(10px, 3.4vw, 13px);
   }
   .archery {
-    width: clamp(78px, 24vw, 110px);
+    left: clamp(14px, 4vw, 28px);
+    bottom: clamp(25px, 6vh, 48px);
+    width: clamp(82px, 25vw, 115px);
   }
   .wish {
     max-width: 90%;

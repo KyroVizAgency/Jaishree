@@ -602,7 +602,7 @@ function refreshRig(){
   // measure target rect or layout center for accurate aim angle across all resolutions
   const tRect = target.getBoundingClientRect();
   const heartX = (tRect.width > 0) ? (tRect.left + tRect.width / 2) : (W * 0.5);
-  const heartY = (tRect.height > 0) ? (tRect.top + tRect.height / 2) : (H * 0.33);
+  const heartY = (tRect.height > 0) ? (tRect.top + tRect.height / 2) : (H * 0.46);
 
   const gripX = aRect.left + aRect.width * 0.5;
   const gripY = aRect.top + aRect.height * 0.8;
