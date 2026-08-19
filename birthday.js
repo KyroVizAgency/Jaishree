@@ -541,6 +541,128 @@ function buildParagraphTokens() {
   });
 }
 
+/* ============================================================
+   PROCEDURAL BUTTERFLY ENGINE (HTML/CSS + JS Sine Flight Math)
+   ============================================================ */
+const butterflyLayer = $('butterflyLayer');
+let butterflies = [];
+let butterflyRAF = 0;
+let bfStartTime = 0;
+let isButterfliesFadingOut = false;
+
+function createButterflyElement(id) {
+  const bf = document.createElement('div');
+  bf.className = 'bf';
+  bf.id = `bf-${id}`;
+  bf.innerHTML = `
+    <div class="bf__wing bf__wing--left">
+      <div class="bf__shape bf__shape--top"></div>
+      <div class="bf__shape bf__shape--bot"></div>
+    </div>
+    <div class="bf__wing bf__wing--right">
+      <div class="bf__shape bf__shape--top"></div>
+      <div class="bf__shape bf__shape--bot"></div>
+    </div>
+    <div class="bf__body"></div>
+    <div class="bf__antenna bf__antenna--left"></div>
+    <div class="bf__antenna bf__antenna--right"></div>
+  `;
+  return bf;
+}
+
+function initButterflies() {
+  if (!butterflyLayer || butterflies.length > 0) return;
+
+  const count = W > 1024 ? 8 : (W > 767 ? 6 : 4);
+  butterflies = [];
+  butterflyLayer.innerHTML = '';
+  isButterfliesFadingOut = false;
+
+  for (let i = 0; i < count; i++) {
+    const el = createButterflyElement(i);
+    butterflyLayer.appendChild(el);
+
+    const scale = rand(0.6, 1.05);
+    const baseX = W > 767 ? rand(W * 0.45, W * 0.88) : rand(W * 0.15, W * 0.85);
+    const baseY = W > 767 ? rand(H * 0.18, H * 0.72) : rand(H * 0.12, H * 0.45);
+    const speedX = rand(0.6, 1.4);
+    const speedY = rand(0.5, 1.2);
+    const ampX = rand(40, 110);
+    const ampY = rand(30, 80);
+    const phaseX = rand(0, Math.PI * 2);
+    const phaseY = rand(0, Math.PI * 2);
+    const staggerDelay = i * rand(350, 550);
+    const targetOpacity = rand(0.75, 0.95);
+
+    const bfData = {
+      el,
+      scale,
+      baseX,
+      baseY,
+      speedX,
+      speedY,
+      ampX,
+      ampY,
+      phaseX,
+      phaseY,
+      staggerDelay,
+      targetOpacity,
+      fadeTimer: null
+    };
+
+    bfData.fadeTimer = setTimeout(() => {
+      if (el && !isButterfliesFadingOut) {
+        el.style.opacity = targetOpacity;
+      }
+    }, staggerDelay);
+
+    butterflies.push(bfData);
+  }
+
+  bfStartTime = performance.now();
+  if (!butterflyRAF) {
+    butterflyRAF = requestAnimationFrame(animateButterflies);
+  }
+}
+
+function animateButterflies(now) {
+  if (!bfStartTime) bfStartTime = now;
+  const elapsed = (now - bfStartTime) / 1000;
+
+  butterflies.forEach((bf) => {
+    if (!bf.el) return;
+    const x = bf.baseX + Math.sin(elapsed * bf.speedX + bf.phaseX) * bf.ampX;
+    const y = bf.baseY + Math.cos(elapsed * bf.speedY + bf.phaseY) * bf.ampY;
+    const rot = Math.sin(elapsed * 1.8 + bf.phaseX) * 14;
+
+    bf.el.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${rot}deg) scale(${bf.scale})`;
+  });
+
+  butterflyRAF = requestAnimationFrame(animateButterflies);
+}
+
+function fadeOutButterflies() {
+  isButterfliesFadingOut = true;
+  butterflies.forEach((bf) => {
+    if (bf.fadeTimer) clearTimeout(bf.fadeTimer);
+    if (bf.el) {
+      bf.el.style.opacity = '0';
+    }
+  });
+}
+
+function destroyButterflies() {
+  if (butterflyRAF) {
+    cancelAnimationFrame(butterflyRAF);
+    butterflyRAF = 0;
+  }
+  butterflies.forEach((bf) => {
+    if (bf.fadeTimer) clearTimeout(bf.fadeTimer);
+  });
+  butterflies = [];
+  if (butterflyLayer) butterflyLayer.innerHTML = '';
+}
+
 function startParagraphAnimation() {
   if (isParagraphAnimPlaying || hasParagraphAnimFinished) return;
   isParagraphAnimPlaying = true;
@@ -558,6 +680,7 @@ function startParagraphAnimation() {
     if (tokenIdx >= wordTokens.length) {
       hasParagraphAnimFinished = true;
       isParagraphAnimPlaying = false;
+      setTimeout(fadeOutButterflies, 1500);
       return;
     }
 
@@ -600,6 +723,7 @@ function showWish(on){
   wishEl.classList.toggle('is-in', on);
   if (on) {
     startParagraphAnimation();
+    initButterflies();
   }
 }
 
@@ -1010,6 +1134,7 @@ function resetAll(){
   treeStop();
   showWish(false);
   resetParagraphAnimation();
+  destroyButterflies();
   window.bdayDone = false; replayArmed = false;
   replay.classList.remove('is-shown'); replay.hidden = true;
   if (filmTL){ filmTL.pause(0); }
