@@ -1058,6 +1058,7 @@ function fire(){
   drawing = false;
   stopBeat();
   cue('release'); cue('whoosh');
+  startBgMusic();
   filmTL = buildFilm(shotGeom());
   filmTL.play(0);
 }
@@ -1172,45 +1173,41 @@ window.addEventListener('resize', () => { if (resizeRAF) return; resizeRAF = req
 resize();
 
 /* ============================================================
-   BACKGROUND AUDIO CONTROLLER (STARTS ON FIRST INTERACTION)
+   BACKGROUND AUDIO CONTROLLER (UNLOCKED ON USER GESTURE)
    ============================================================ */
 const bgAudio          = $('bgMusic');
 let isMusicPlaying     = false;
-let musicFadeInterval = null;
 
 function startBgMusic() {
   if (!bgAudio || isMusicPlaying) return;
 
-  bgAudio.volume = 0;
-  bgAudio.play().then(() => {
-    isMusicPlaying = true;
+  bgAudio.loop = true;
+  bgAudio.volume = 0.35;
 
-    // Smooth volume ramp-up over 1.5 seconds
-    clearInterval(musicFadeInterval);
-    let vol = 0;
-    musicFadeInterval = setInterval(() => {
-      vol += 0.05;
-      if (vol >= 0.7) {
-        vol = 0.7;
-        clearInterval(musicFadeInterval);
-      }
-      bgAudio.volume = vol;
-    }, 100);
-  }).catch((err) => {
-    console.warn("Audio playback error:", err);
-  });
+  const playPromise = bgAudio.play();
+  if (playPromise !== undefined) {
+    playPromise.then(() => {
+      isMusicPlaying = true;
+      console.info("[Birthday] Background music playing softly");
+    }).catch((err) => {
+      console.warn("[Birthday] Audio playback waiting for user gesture:", err);
+    });
+  }
 }
 
-// Start background music on the very first touch/click/key anywhere on the website
-const handleFirstInteraction = () => {
+// Mobile fallback: unlock music on first interaction anywhere
+const unlockMusic = async () => {
+  if (isMusicPlaying) return;
   startBgMusic();
-  document.removeEventListener('pointerdown', handleFirstInteraction);
-  document.removeEventListener('touchstart', handleFirstInteraction);
-  document.removeEventListener('keydown', handleFirstInteraction);
+  if (isMusicPlaying) {
+    document.removeEventListener('pointerdown', unlockMusic);
+    document.removeEventListener('touchstart', unlockMusic);
+    document.removeEventListener('click', unlockMusic);
+  }
 };
-document.addEventListener('pointerdown', handleFirstInteraction);
-document.addEventListener('touchstart', handleFirstInteraction);
-document.addEventListener('keydown', handleFirstInteraction);
+document.addEventListener('pointerdown', unlockMusic);
+document.addEventListener('touchstart', unlockMusic);
+document.addEventListener('click', unlockMusic);
 
 function bootMainScene() {
   console.info("[Birthday] Intro mounted");
