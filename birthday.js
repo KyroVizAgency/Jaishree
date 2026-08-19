@@ -478,7 +478,130 @@ function drawRested(){
   for (const r of rested) drawSprite(SPR.crisp[r.idx], r.x, r.y, r.box, r.rot, r.a);
 }
 
-function showWish(on){ wishEl.classList.toggle('is-in', on); }
+/* ============================================================
+   PUNCTUATION-AWARE CINEMATIC PARAGRAPH ANIMATION ENGINE
+   ============================================================ */
+const EXACT_PARAGRAPH_TEXT = "Jaishree, some people come into our lives and somehow make ordinary moments feel a little more special. Your name itself feels like a little piece of sunshine—soft, warm, and impossible to forget. On your birthday, I just hope life gives you countless reasons to smile, beautiful memories to keep close, and the courage to chase everything your heart wishes for. May this new chapter bring you happiness, growth, laughter, and all the little moments that make life beautiful. Keep smiling, keep glowing, and always remember that you deserve every beautiful thing coming your way. Happy Birthday, Jaishree. ♡";
+
+const EMPHASIS_PHRASES = [
+  "a little piece of sunshine",
+  "beautiful memories",
+  "everything your heart wishes for",
+  "keep smiling, keep glowing"
+];
+
+const wParagraph = $('wParagraph');
+let paragraphTimer = null;
+let isParagraphAnimPlaying = false;
+let hasParagraphAnimFinished = false;
+let wordTokens = [];
+let wordSpans = [];
+
+function buildParagraphTokens() {
+  if (!wParagraph) return;
+  wParagraph.innerHTML = '';
+  wordTokens = [];
+  wordSpans = [];
+
+  const rawWords = EXACT_PARAGRAPH_TEXT.split(' ');
+
+  rawWords.forEach((wordText, idx) => {
+    const span = document.createElement('span');
+    span.className = 'w-word';
+    span.textContent = wordText + (idx === rawWords.length - 1 ? '' : ' ');
+
+    const lowerWord = wordText.toLowerCase().replace(/[^a-z0-9]/g, '');
+    let isEmphasized = false;
+    EMPHASIS_PHRASES.forEach((phrase) => {
+      if (phrase.includes(lowerWord) && lowerWord.length > 2) {
+        isEmphasized = true;
+      }
+    });
+
+    if (isEmphasized) {
+      span.classList.add('w-word--emphasis');
+    }
+    if (wordText === '♡') {
+      span.classList.add('w-word--heart');
+    }
+
+    wParagraph.appendChild(span);
+    wordSpans.push(span);
+
+    const endsWithComma = wordText.endsWith(',');
+    const endsWithPeriod = wordText.endsWith('.');
+    const isHeart = wordText === '♡';
+
+    wordTokens.push({
+      text: wordText,
+      endsWithComma,
+      endsWithPeriod,
+      isHeart
+    });
+  });
+}
+
+function startParagraphAnimation() {
+  if (isParagraphAnimPlaying || hasParagraphAnimFinished) return;
+  isParagraphAnimPlaying = true;
+
+  if (reduceMotion) {
+    wordSpans.forEach(s => s.classList.add('is-visible'));
+    hasParagraphAnimFinished = true;
+    isParagraphAnimPlaying = false;
+    return;
+  }
+
+  let tokenIdx = 0;
+
+  function stepToken() {
+    if (tokenIdx >= wordTokens.length) {
+      hasParagraphAnimFinished = true;
+      isParagraphAnimPlaying = false;
+      return;
+    }
+
+    const token = wordTokens[tokenIdx];
+    const span = wordSpans[tokenIdx];
+    span.classList.add('is-visible');
+
+    let delay = 90; // smooth base word pacing (~90ms)
+
+    if (token.isHeart) {
+      span.classList.add('pulse-once');
+      delay = 400;
+    } else if (token.endsWithComma || token.endsWithPeriod) {
+      // MANDATORY RULE: EXACTLY 1.5 SECONDS (1500ms) PAUSE AFTER COMMA OR PERIOD IS REVEALED!
+      delay = 1500;
+    }
+
+    tokenIdx++;
+    paragraphTimer = setTimeout(stepToken, delay);
+  }
+
+  // Small initial pause after heading reveals
+  paragraphTimer = setTimeout(stepToken, 600);
+}
+
+function resetParagraphAnimation() {
+  clearTimeout(paragraphTimer);
+  paragraphTimer = null;
+  isParagraphAnimPlaying = false;
+  hasParagraphAnimFinished = false;
+  wordSpans.forEach(s => {
+    s.classList.remove('is-visible', 'pulse-once');
+  });
+}
+
+// Prepare tokens initially
+buildParagraphTokens();
+
+function showWish(on){
+  wishEl.classList.toggle('is-in', on);
+  if (on) {
+    startParagraphAnimation();
+  }
+}
 
 /* the tree's own rAF: plays once from treeStart(), then holds, living */
 let treeStartT = 0, treeLastT = 0, treeRAF = 0, lastPetal = 0, replayArmed = false;
@@ -886,6 +1009,7 @@ function armReplay(){
 function resetAll(){
   treeStop();
   showWish(false);
+  resetParagraphAnimation();
   window.bdayDone = false; replayArmed = false;
   replay.classList.remove('is-shown'); replay.hidden = true;
   if (filmTL){ filmTL.pause(0); }

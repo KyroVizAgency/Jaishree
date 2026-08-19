@@ -585,6 +585,7 @@ body{
   background-clip: text;
   color: transparent;
   filter: drop-shadow(0 1px 1px rgba(255, 252, 248, 0.95)) drop-shadow(0 2px 5px rgba(130, 18, 55, 0.3));
+  text-shadow: 0 0 16px rgba(255, 95, 134, 0.35);
 }
 
 .wish__paragraph {
@@ -593,18 +594,45 @@ body{
   font-size: clamp(14px, 1.5vw, 17px);
   line-height: 1.78;
   color: #4a2832;
-  margin-top: 12px;
+  margin-top: 14px;
   text-align: left;
-  opacity: 0;
-  transform: translateY(12px);
-  filter: blur(4px);
-  transition: opacity 1s ease 0.6s, transform 1s ease 0.6s, filter 1s ease 0.6s;
 }
 
-.wish.is-in .wish__paragraph {
+/* Individual word tokens for punctuation-aware reveal animation */
+.w-word {
+  display: inline-block;
+  opacity: 0;
+  filter: blur(3px);
+  transform: translateY(6px);
+  transition: opacity 0.45s ease, filter 0.45s ease, transform 0.45s ease;
+  white-space: pre;
+}
+
+.w-word.is-visible {
   opacity: 1;
-  transform: translateY(0);
   filter: blur(0);
+  transform: translateY(0);
+}
+
+.w-word--emphasis {
+  font-style: italic;
+  color: #b81d4e;
+  font-weight: 600;
+}
+
+.w-word--heart {
+  color: #d4235c;
+  filter: drop-shadow(0 0 6px rgba(212, 35, 92, 0.4));
+}
+
+.w-word--heart.pulse-once {
+  animation: heartPulseOnce 0.8s ease-out forwards;
+}
+
+@keyframes heartPulseOnce {
+  0% { transform: scale(0.6); opacity: 0; }
+  50% { transform: scale(1.35); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 .wish__footer {
