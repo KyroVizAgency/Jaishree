@@ -276,9 +276,29 @@ body{
     width: clamp(90px, 24vw, 130px);
   }
   .wish {
-    max-width: 85%;
-    left: 7.5%;
-    bottom: 8%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 440px;
+    bottom: 5vh;
+  }
+  .wish__card {
+    text-align: center;
+    padding: 22px 20px;
+  }
+  .wish__paragraph {
+    text-align: center;
+    font-size: clamp(13.5px, 3.8vw, 16px);
+    line-height: 1.72;
+  }
+  .wish__footer {
+    justify-content: center;
+  }
+  .replay {
+    right: 16px;
+    bottom: 16px;
+    padding: 8px 14px 8px 12px;
+    font-size: 11.5px;
   }
 }
 
@@ -312,9 +332,21 @@ body{
     width: clamp(82px, 25vw, 115px);
   }
   .wish {
-    max-width: 90%;
-    left: 5%;
-    bottom: 6%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 92%;
+    max-width: 380px;
+    bottom: 4vh;
+  }
+  .wish__card {
+    text-align: center;
+    padding: 18px 16px;
+    border-radius: 20px;
+  }
+  .wish__paragraph {
+    text-align: center;
+    font-size: clamp(13px, 3.6vw, 15px);
+    line-height: 1.7;
   }
 }
 .hero__ring{ display:none; }
@@ -454,138 +486,195 @@ body{
 /* ============================================================
    ACT 4 — THE HAND-LETTERED WISH (over the tree)
    ============================================================ */
-.wish{
-  position:absolute;
-  left:5.5%; bottom:7%;
-  max-width:44%;
-  z-index:6;
-  pointer-events:none;
-  color:var(--ink);
-  visibility:hidden;
-  display:flex;
-  flex-direction:column;
-  align-items:flex-start;
+/* ============================================================
+   ACT 4 — THE FINAL EMOTIONAL MESSAGE CARD (over the tree)
+   ============================================================ */
+.wish {
+  position: absolute;
+  left: 4vw;
+  bottom: 5vh;
+  width: calc(100% - 8vw);
+  max-width: 640px;
+  z-index: 6;
+  pointer-events: auto;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.8s ease, opacity 0.8s ease;
 }
-.wish.is-in{ visibility:visible; }
-.wish::before{
-  content:""; position:absolute; inset:-18% -24% -24% -16%;
-  background:radial-gradient(84% 98% at 34% 52%, rgba(255,250,243,.94), rgba(255,250,243,.6) 48%, rgba(255,250,243,0) 80%);
-  z-index:-1; opacity:0; transition:opacity 1s ease;
+
+.wish.is-in {
+  visibility: visible;
+  opacity: 1;
 }
-.wish.is-in::before{ opacity:1; }
-.wish__eyebrow{
-  font-family:"Cormorant Garamond", Georgia, serif;
-  font-style:italic; font-weight:600;
-  font-size:clamp(13px, 2.2vw, 20px);
-  letter-spacing:.05em; color:#9c4f63;
-  text-shadow:0 1px 2px #fff8f1, 0 0 8px rgba(255,248,241,.95);
-  margin-bottom:6px;
+
+/* Translucent Frosted Glass Card Container */
+.wish__card {
+  position: relative;
+  background: rgba(255, 252, 248, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-radius: 24px;
+  padding: clamp(22px, 3.8vw, 34px) clamp(22px, 4vw, 38px);
+  box-shadow:
+    0 20px 60px rgba(168, 15, 67, 0.12),
+    0 4px 20px rgba(248, 187, 208, 0.25),
+    inset 0 1px 2px rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transform: translateY(16px);
+  filter: blur(4px);
+  opacity: 0;
+  transition: transform 1s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.9s ease, filter 0.9s ease;
 }
-.wish__heroWrap{
-  position:relative;
-  display:inline-block;
-  padding-left:0.2em;
-  padding-right:0.2em;
-  margin-left:-0.2em;
-  overflow:visible;
-  margin-bottom:6px;
+
+.wish.is-in .wish__card {
+  transform: translateY(0);
+  opacity: 1;
+  filter: blur(0);
 }
-.wish__heroWrap::before{
-  content:""; position:absolute; left:-12%; right:-12%; top:-26%; bottom:-22%;
-  background:radial-gradient(60% 70% at 46% 52%, rgba(255,214,168,.5), rgba(255,150,150,.2) 52%, transparent 74%);
-  filter:blur(14px); z-index:-1; opacity:0; pointer-events:none;
+
+.wish__eyebrow {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(14px, 1.8vw, 18px);
+  letter-spacing: 0.05em;
+  color: #9c4f63;
+  margin-bottom: 4px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s;
 }
-.wish__heroWrap::after{
-  content:"\2726";
-  position:absolute; right:-1%; top:-14%;
-  font-size:clamp(15px, 3.6vw, 32px);
-  color:#ffe1a0; text-shadow:0 0 12px rgba(255,205,120,.95);
-  opacity:0; pointer-events:none;
+
+.wish.is-in .wish__eyebrow {
+  opacity: 1;
+  transform: translateY(0);
 }
-.wish__hero{
-  font-family:"Great Vibes", cursive; font-weight:400;
-  margin:0;
-  padding:0;
-  overflow:visible;
-  background:linear-gradient(180deg, #e85a83 0%, #c41f52 50%, #9c0f42 100%);
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  filter:
-    drop-shadow(0 1px 1px rgba(255,252,248,.98))
-    drop-shadow(0 2px 6px rgba(130,18,55,.45));
-  clip-path:inset(-20% 100% -35% -35%);
-  transform-origin:8% 60%;             /* breathe from the start of the line */
+
+.wish__heading {
+  font-weight: 400;
+  margin: 0 0 10px 0;
+  padding: 0;
+  line-height: 1.15;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.8s ease 0.4s, transform 0.8s ease 0.4s;
 }
-.wish__heroLine{
-  display:block;
-  font-size:clamp(26px, 4.2vw, 48px);
-  line-height:1.15;
-  white-space:nowrap;
+
+.wish.is-in .wish__heading {
+  opacity: 1;
+  transform: translateY(0);
 }
-.wish__heroName{
-  display:block;
-  font-size:clamp(34px, 5.8vw, 64px);
-  line-height:1.15;
-  margin-top:2px;
-  padding-left:0.22em;
-  white-space:nowrap;
-  background:linear-gradient(180deg, #ff5f86 0%, #d4235c 50%, #9c0f42 100%);
-  -webkit-background-clip:text; background-clip:text; color:transparent;
+
+.wish__headingSmall {
+  display: block;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(20px, 2.8vw, 30px);
+  color: #8a4a5a;
+  letter-spacing: 0.02em;
 }
-.wish__rule{
-  display:block; width:clamp(46px, 11vw, 100px); height:2px;
-  margin:4px 0 8px;
-  background:linear-gradient(90deg, var(--gold-2), rgba(232,162,61,0));
-  box-shadow:0 0 8px rgba(255,247,240,.9);
-  transform-origin:left center;
+
+.wish__headingName {
+  display: block;
+  font-family: "Great Vibes", cursive;
+  font-size: clamp(38px, 6vw, 68px);
+  line-height: 1.1;
+  margin-top: 2px;
+  background: linear-gradient(180deg, #ff5f86 0%, #d4235c 50%, #9c0f42 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 1px 1px rgba(255, 252, 248, 0.95)) drop-shadow(0 2px 5px rgba(130, 18, 55, 0.3));
 }
-.wish__sub{
-  font-family:"Cormorant Garamond", Georgia, serif;
-  font-weight:600; font-size:clamp(12px, 1.8vw, 18px);
-  letter-spacing:.03em; color:#6e3f4a;
-  text-shadow:0 1px 2px #fff8f1, 0 0 8px rgba(255,248,241,.98);
+
+.wish__paragraph {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 500;
+  font-size: clamp(14px, 1.5vw, 17px);
+  line-height: 1.78;
+  color: #4a2832;
+  margin-top: 12px;
+  text-align: left;
+  opacity: 0;
+  transform: translateY(12px);
+  filter: blur(4px);
+  transition: opacity 1s ease 0.6s, transform 1s ease 0.6s, filter 1s ease 0.6s;
 }
-.wish__eyebrow, .wish__rule, .wish__sub{
-  opacity:0; transform:translateY(12px); filter:blur(5px);
-  transition:opacity .8s ease, transform .9s var(--ease-out), filter .8s ease;
+
+.wish.is-in .wish__paragraph {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
 }
-.wish__rule{ transform:translateY(12px) scaleX(.3); }
-.wish.is-in .wish__eyebrow,
-.wish.is-in .wish__sub{ opacity:1; transform:translateY(0); filter:blur(0); }
-.wish.is-in .wish__rule{ opacity:1; transform:translateY(0) scaleX(1); }
-.wish.is-in .wish__rule{ transition-delay:1.35s; }
-.wish.is-in .wish__sub{  transition-delay:1.55s; }
-.wish.is-in .wish__hero{
-  animation:write 1.2s cubic-bezier(.62,.04,.24,1) .35s forwards,
-            wishBreath 4s ease-in-out 1.9s infinite;
+
+.wish__footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity 0.8s ease 1s, transform 0.8s ease 1s;
 }
-/* a gentle living breath — transform only, so it can never wash the fill out */
-@keyframes wishBreath{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.02); } }
-.wish.is-in .wish__heroWrap::before{ animation:hlin .8s ease .3s forwards, hlpulse 3.4s ease-in-out 1.7s infinite; }
-.wish.is-in .wish__heroWrap::after{ animation:twk 2.6s ease-in-out 1.6s infinite; }
-@keyframes write{ from{ clip-path:inset(-20% 100% -35% -35%); } to{ clip-path:inset(-20% -25% -35% -35%); } }
-@keyframes sheen{ 0%,18%{ background-position:0% 50%; } 60%,100%{ background-position:100% 50%; } }
-@keyframes hlin{ from{ opacity:0; transform:scale(.86); } to{ opacity:.92; transform:scale(1); } }
-@keyframes hlpulse{ 0%,100%{ opacity:.72; } 50%{ opacity:1; } }
-@keyframes twk{ 0%,100%{ opacity:0; transform:scale(.5) rotate(-12deg); } 45%{ opacity:1; transform:scale(1.05) rotate(16deg); } }
+
+.wish.is-in .wish__footer {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.wish__sparkle {
+  font-size: clamp(16px, 2.2vw, 22px);
+  color: #d4235c;
+  filter: drop-shadow(0 0 6px rgba(212, 35, 92, 0.4));
+  animation: heartPulse 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes heartPulse {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(1.18); opacity: 1; }
+}
 
 /* ============================================================
-   REPLAY
+   REPLAY (AGAIN BUTTON)
    ============================================================ */
-.replay{
-  position:absolute; right:20px; bottom:18px; z-index:7;
-  display:inline-flex; align-items:center; gap:7px;
-  padding:9px 15px 9px 12px; border-radius:999px;
-  font:600 12.5px/1 "Cormorant Garamond", Georgia, serif; letter-spacing:.12em; text-transform:uppercase;
-  color:#8a4a5a; background:rgba(255,248,242,.72);
-  border:1px solid rgba(150,60,80,.18);
-  box-shadow:0 6px 20px -8px rgba(120,20,50,.4);
-  backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
-  cursor:pointer; opacity:0; transform:translateY(8px);
-  transition:opacity .5s ease, transform .5s var(--ease-out), background .3s ease;
+.replay {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  z-index: 7;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 18px 10px 14px;
+  border-radius: 999px;
+  font: 600 13px/1 "Cormorant Garamond", Georgia, serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #8a4a5a;
+  background: rgba(255, 252, 248, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 8px 24px -4px rgba(168, 15, 67, 0.16);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.5s ease, transform 0.5s var(--ease-out), background 0.3s ease, box-shadow 0.3s ease;
 }
-.replay.is-shown{ opacity:1; transform:translateY(0); }
-.replay:hover{ background:rgba(255,252,248,.92); }
-.replay svg{ opacity:.8; }
+
+.replay.is-shown {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.replay:hover {
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 10px 28px -4px rgba(212, 35, 92, 0.25);
+  color: #c41f52;
+}
+
+.replay svg {
+  opacity: 0.85;
+}
 
 /* ============================================================
    THE LENS — grain + vignette over every act
